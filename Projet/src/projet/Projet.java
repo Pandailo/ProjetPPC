@@ -20,8 +20,8 @@ import org.chocosolver.solver.Solver;
 public class Projet extends AbstractProblem
 {
 
-    private final int nbMax = 8;
-    private final int nb = 2;
+    private final int nbMax = 18;
+    private final int nb = 16;
     IntVar[] allQueens;
     int[][] initialQueens = new int[nbMax][nbMax];
     int[][] tableauvide = new int[nbMax][nbMax];
@@ -39,21 +39,22 @@ public class Projet extends AbstractProblem
             }
         }
     }
-    
+
     public void displayTableau()
     {
         for (int i = 0; i < nbMax; i++)
         {
             for (int j = 0; j < nbMax; j++)
             {
-                System.out.print(initialQueens[i][j]+" ");
+                System.out.print(initialQueens[i][j] + " ");
             }
             System.out.println();
         }
     }
 
-    public void placerReines(int numQueen)
+    public void placerReines(int numQueen,int calls)
     {
+        System.out.println("appel :"+calls);
         if (numQueen == nb)
         {
             /*sortie*/
@@ -69,7 +70,7 @@ public class Projet extends AbstractProblem
             //Si la case est libre
             if (initialQueens[queen][colonne] == 0)
             {
-                initialQueens[queen][colonne] =1;
+                initialQueens[queen][colonne] = 1;
                 for (int i = 0; i < nbMax; i++)
                 {
                     for (int j = 0; j < nbMax; j++)
@@ -90,17 +91,42 @@ public class Projet extends AbstractProblem
                 }
                 if (caselibre && numQueen < nb)
                 {
-                    placerReines(numQueen + 1);
+                    // System.out.println("passage reine suivante");
+                    placerReines(numQueen + 1,calls+1);
                 }
                 else
                 {
                     initialQueens = tableauvide;
-                    placerReines(0);
+                    System.out.println("Nouvel essai très le oui");
+                    placerReines(0,calls+1);
                 }
             }
             else
             {
-                placerReines(numQueen);
+                for (int i = 0; i < nbMax; i++)
+                {
+                    for (int j = 0; j < nbMax; j++)
+                    {
+                        if (initialQueens[i][j] == 0)
+                        {
+                            caselibre = true;
+                        }
+                    }
+                }
+                if (caselibre)
+                // System.out.println("Nouvel essai sur même reine");
+                {
+                    placerReines(numQueen,calls+1);
+                }
+                else
+                {
+                    if (numQueen < nb)
+                    {
+                        initialQueens = tableauvide;
+                        System.out.println("Nouvel essai très le oui");
+                        placerReines(0,calls+1);
+                    }
+                }
             }
         }
     }
@@ -109,7 +135,7 @@ public class Projet extends AbstractProblem
     {
         Projet p = new Projet();
         p.initTableaux();
-        p.placerReines(0);
+        p.placerReines(0,0);
         p.displayTableau();
     }
 
