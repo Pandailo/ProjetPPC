@@ -20,12 +20,12 @@ import org.chocosolver.solver.Solver;
 public class Projet extends AbstractProblem
 {
 
-    private final int nbMax = 18;
-    private final int nb = 16;
+    private final int nbMax = 8;
+    private final int nb = 5;
     IntVar[] allQueens;
     int[][] initialQueens = new int[nbMax][nbMax];
     int[][] tableauvide = new int[nbMax][nbMax];
-
+    private IntVar[] vars;
     /*Les colonnes et lignes sont numérotées de 0 à 1
     /* génération des premières reines bien placée*/
     public void initTableaux()
@@ -52,79 +52,74 @@ public class Projet extends AbstractProblem
         }
     }
 
-    public void placerReines(int numQueen,int calls)
+    public void placerReines()
     {
-        System.out.println("appel :"+calls);
-        if (numQueen == nb)
+        int numQueen = 0;
+        while (numQueen < nb)
         {
-            /*sortie*/
-        }
-        else
-        {
-            int queen = 0;
-            boolean interdit;
-            interdit = false;
-            int colonne = (int) (Math.random() * (nbMax));
-            queen = (int) (Math.random() * (nbMax));
-            boolean caselibre = false;
-            //Si la case est libre
-            if (initialQueens[queen][colonne] == 0)
+            if (numQueen == nb)
             {
-                initialQueens[queen][colonne] = 1;
-                for (int i = 0; i < nbMax; i++)
-                {
-                    for (int j = 0; j < nbMax; j++)
-                    {
-                        /*on tag les places non interdites à interdites*/
-                        if (i == queen || colonne == j || abs(queen - i) == abs(colonne - j))
-                        {/*Est en diagonale OU sur ligne OU sur colonne*/
-                            if (initialQueens[i][j] == 0)
-                            {
-                                initialQueens[i][j] = 8;//Bloquée
-                            }
-                        }
-                        if (initialQueens[i][j] == 0)
-                        {
-                            caselibre = true;
-                        }
-                    }
-                }
-                if (caselibre && numQueen < nb)
-                {
-                    // System.out.println("passage reine suivante");
-                    placerReines(numQueen + 1,calls+1);
-                }
-                else
-                {
-                    initialQueens = tableauvide;
-                    System.out.println("Nouvel essai très le oui");
-                    placerReines(0,calls+1);
-                }
+                /*sortie*/
             }
             else
             {
-                for (int i = 0; i < nbMax; i++)
+                int queen = 0;
+                boolean interdit;
+                interdit = false;
+                int colonne = (int) (Math.random() * (nbMax));
+                queen = (int) (Math.random() * (nbMax));
+                boolean caselibre = false;
+                //Si la case est libre
+                if (initialQueens[queen][colonne] == 0)
                 {
-                    for (int j = 0; j < nbMax; j++)
+                    initialQueens[queen][colonne] = 1;
+                    for (int i = 0; i < nbMax; i++)
                     {
-                        if (initialQueens[i][j] == 0)
+                        for (int j = 0; j < nbMax; j++)
                         {
-                            caselibre = true;
+                            /*on tag les places non interdites à interdites*/
+                            if (i == queen || colonne == j || abs(queen - i) == abs(colonne - j))
+                            {/*Est en diagonale OU sur ligne OU sur colonne*/
+                                if (initialQueens[i][j] == 0)
+                                {
+                                    initialQueens[i][j] = 8;//Bloquée
+                                }
+                            }
+                            if (initialQueens[i][j] == 0)
+                            {
+                                caselibre = true;
+                            }
                         }
                     }
-                }
-                if (caselibre)
-                // System.out.println("Nouvel essai sur même reine");
-                {
-                    placerReines(numQueen,calls+1);
+                    if (caselibre)
+                    {
+                        // System.out.println("passage reine suivante");
+                        numQueen++;
+                    }
+                    else
+                    {
+                        initialQueens = tableauvide;
+                        numQueen=0;
+                        System.out.println("Nouvel essai très le oui");
+                    }
                 }
                 else
                 {
-                    if (numQueen < nb)
+                    for (int i = 0; i < nbMax; i++)
+                    {
+                        for (int j = 0; j < nbMax; j++)
+                        {
+                            if (initialQueens[i][j] == 0)
+                            {
+                                caselibre = true;
+                            }
+                        }
+                    }
+                    if (!caselibre)
                     {
                         initialQueens = tableauvide;
                         System.out.println("Nouvel essai très le oui");
-                        placerReines(0,calls+1);
+                        numQueen=0;
                     }
                 }
             }
@@ -135,7 +130,8 @@ public class Projet extends AbstractProblem
     {
         Projet p = new Projet();
         p.initTableaux();
-        p.placerReines(0,0);
+        p.placerReines();
+        p.execute(args);
         p.displayTableau();
     }
 
@@ -148,13 +144,43 @@ public class Projet extends AbstractProblem
     @Override
     public void buildModel()
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int[] taken=new int[nbMax];
+        for(int i =0; i <nbMax ; i++){
+            taken[i]=-1;
+        }
+        this.vars = new IntVar[nbMax];
+        for(int i =0; i <nbMax ; i++){
+            for(int j =0; j <nbMax ; j++){
+                if(initialQueens[i][j]==1){
+                    taken[j]=i;
+                }
+            }
+        }
+        for (int i = 0; i < vars.length; i++)
+        {
+            if(taken[i]==-1){
+               this.vars[i] = VariableFactory.enumerated("Q_" + i, 0, nbMax-1, solver);// 1,n domaine-> valeurs de 1 à n  
+            }
+            else{
+                this.vars[i] = VariableFactory.enumerated("Q_" + i,taken[i] , taken[i], solver);// 1,n domaine-> valeurs de 1 à n  
+            }
+        }
+        this.solver.post(IntConstraintFactory.alldifferent(vars, "AC"));
+        for (int i = 0; i < nbMax - 1; i++)
+        {
+            for (int j = i + 1; j < nbMax ; j++)
+            {
+                int k = j - i;
+                this.solver.post(IntConstraintFactory.arithm(vars[i], "!=", vars[j], "+", -k));
+                this.solver.post(IntConstraintFactory.arithm(vars[i], "!=", vars[j], "+", k));
+            }
+        }
     }
 
     @Override
     public void configureSearch()
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     @Override
@@ -166,6 +192,6 @@ public class Projet extends AbstractProblem
     @Override
     public void prettyOut()
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 }
