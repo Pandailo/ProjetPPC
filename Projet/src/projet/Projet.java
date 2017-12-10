@@ -6,6 +6,9 @@
 package projet;
 
 import static java.lang.Math.abs;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.chocosolver.samples.AbstractProblem;
 import org.chocosolver.solver.constraints.IntConstraintFactory;
 import org.chocosolver.solver.variables.IntVar;
@@ -52,6 +55,52 @@ public class Projet extends AbstractProblem
         }
     }
 
+    public void placerReines2(){
+        ArrayList<Integer> rdmQueens = new ArrayList<Integer>();
+        int numQueen = 0;
+        boolean correct = false;
+        boolean tmpCorrect=false;
+        int ligneI = -1;
+        int colonneI = -1;
+        int ligneJ = -1;
+        int colonneJ = -1;        
+        //init du tableau pour qu'il n y ait aucune collision lignes/colonnes
+        for(int i=0;i<nbMax;i++){
+            rdmQueens.add(i);//ajoute l'entier à la fin de la liste
+        }
+        while(!correct){
+            System.out.println("Reset echiquier");
+            initialQueens=tableauvide;
+            tmpCorrect=true;
+            Collections.shuffle(rdmQueens);
+            for(int i=0;i<nb;i++){
+                // on pose les n premières reines sur l'échiquier
+                ligneI = i;
+                colonneI = rdmQueens.get(i);   
+                initialQueens[ligneI][colonneI]=1;
+            }
+             //Verification des conflits
+            for(int i=0;i<nb;i++){
+                // on vérifie les reines posées
+                ligneI = i;
+                colonneI = rdmQueens.get(i);   
+                for(int j =0;j<nb;j++){
+                    if(i!=j){
+                        ligneJ = j;
+                        colonneJ = rdmQueens.get(j); 
+                        if( abs(ligneJ - ligneI) == abs(colonneI - colonneJ)){//Vérification des diagonales
+                            // Si conflit -> on réinitialise
+                            tmpCorrect = false;
+                            j=nb;
+                            i=nb;
+                        }
+                    }
+                }
+            } 
+            
+                correct = tmpCorrect;
+        }
+    }
     public void placerReines()
     {
         int numQueen = 0;
@@ -130,8 +179,8 @@ public class Projet extends AbstractProblem
     {
         Projet p = new Projet();
         p.initTableaux();
-        p.placerReines();
-        p.execute(args);
+        p.placerReines2();
+       // p.execute(args);
         p.displayTableau();
     }
 
