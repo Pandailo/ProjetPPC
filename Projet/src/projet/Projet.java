@@ -70,7 +70,7 @@ public class Projet extends AbstractProblem
         }
         while(!correct){
             System.out.println("Reset echiquier");
-            initialQueens=tableauvide;
+            initTableaux();
             tmpCorrect=true;
             Collections.shuffle(rdmQueens);
             for(int i=0;i<nb;i++){
@@ -97,8 +97,7 @@ public class Projet extends AbstractProblem
                     }
                 }
             } 
-            
-                correct = tmpCorrect;
+            correct = tmpCorrect;
         }
     }
     public void placerReines()
@@ -180,7 +179,7 @@ public class Projet extends AbstractProblem
         Projet p = new Projet();
         p.initTableaux();
         p.placerReines2();
-       // p.execute(args);
+        p.execute(args);
         p.displayTableau();
     }
 
