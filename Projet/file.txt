@@ -1,0 +1,20 @@
+** Choco 3.3.1 (2015-05) : Constraint Programming Solver, Copyleft (c) 2010-2015
+- Solver features:
+	Variables : 10
+	Constraints : 57
+	Default search strategy : no
+	Completed search strategy : no
+- Incomplete search - Unexpected interruption.
+	Solutions: 0
+	Building time : 0,049s
+	Initialisation : 0,003s
+	Initial propagation : 0,006s
+	Resolution : 0,006s
+	Nodes: 0 (0,0 n/s) 
+	Backtracks: 0
+	Fails: 1
+	Restarts: 0
+	Max depth: 0
+	Memory: -1mb
+	Variables: 10
+	Constraints: 57

@@ -5,6 +5,9 @@
  */
 package projet;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import static java.lang.Math.abs;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,7 +72,6 @@ public class Projet extends AbstractProblem
             rdmQueens.add(i);//ajoute l'entier à la fin de la liste
         }
         while(!correct){
-            System.out.println("Reset echiquier");
             initTableaux();
             tmpCorrect=true;
             Collections.shuffle(rdmQueens);
@@ -148,7 +150,6 @@ public class Projet extends AbstractProblem
                     {
                         initialQueens = tableauvide;
                         numQueen=0;
-                        System.out.println("Nouvel essai très le oui");
                     }
                 }
                 else
@@ -166,7 +167,7 @@ public class Projet extends AbstractProblem
                     if (!caselibre)
                     {
                         initialQueens = tableauvide;
-                        System.out.println("Nouvel essai très le oui");
+                        //System.out.println("Nouvel essai très le oui");
                         numQueen=0;
                     }
                 }
@@ -174,13 +175,15 @@ public class Projet extends AbstractProblem
         }
     }
 
-    public static void main(String[] args)
+    public static void main(String[] args) throws FileNotFoundException
     {
         Projet p = new Projet();
+        FileOutputStream f = new FileOutputStream("file.txt");
+        System.setOut(new PrintStream(f));
         p.initTableaux();
         p.placerReines2();
         p.execute(args);
-        p.displayTableau();
+       // p.displayTableau();
     }
 
     @Override
