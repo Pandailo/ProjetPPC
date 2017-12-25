@@ -5,6 +5,7 @@
  */
 package projet;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
@@ -178,11 +179,23 @@ public class Projet extends AbstractProblem
     public static void main(String[] args) throws FileNotFoundException
     {
         Projet p = new Projet();
-        FileOutputStream f = new FileOutputStream("file.txt");
-        System.setOut(new PrintStream(f));
-        p.initTableaux();
-        p.placerReines2();
-        p.execute(args);
+     //  FileOutputStream f = new FileOutputStream("file.txt");
+      //  System.setOut(new PrintStream(f));
+      // Create a stream to hold the output
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    PrintStream ps = new PrintStream(baos);
+    // IMPORTANT: Save the old System.out!
+    PrintStream old = System.out;
+    // Tell Java to use your special stream
+    System.setOut(ps);
+    p.initTableaux();
+    p.placerReines2();
+    p.execute(args);
+    // Put things back
+    System.out.flush();
+    System.setOut(old);
+    // Show what happened
+    System.out.println("Here: " + baos.toString());
        // p.displayTableau();
     }
 
