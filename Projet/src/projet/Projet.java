@@ -202,7 +202,7 @@ public class Projet extends AbstractProblem
             s=s.replace(" : ", ",");
             s=s.replace(": ", ",");
             br.close();
-            String sinit="\r\nReines Max,"+nbMax+"\r\nReines placees,"+nb+"\r\n";
+            String sinit="- Reines:\r\n	Reines Max,"+nbMax+"\r\n	Reines placees,"+nb;
             s=s.replace("** Choco 3.3.1 (2015-05),Constraint Programming Solver. Copyleft (c) 2010-2015",sinit);
             fos.write(s.getBytes());
         
