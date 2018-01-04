@@ -5,9 +5,15 @@
  */
 package projet;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import static java.lang.Math.abs;
 import java.util.ArrayList;
@@ -28,7 +34,7 @@ public class Projet extends AbstractProblem
 {
 
     private final int nbMax = 8;
-    private final int nb = 5;
+    private final int nb = 2;
     IntVar[] allQueens;
     int[][] initialQueens = new int[nbMax][nbMax];
     int[][] tableauvide = new int[nbMax][nbMax];
@@ -168,7 +174,7 @@ public class Projet extends AbstractProblem
                     if (!caselibre)
                     {
                         initialQueens = tableauvide;
-                        //System.out.println("Nouvel essai très le oui");
+                        //System.out.println("Nouvel essai");
                         numQueen=0;
                     }
                 }
@@ -176,27 +182,85 @@ public class Projet extends AbstractProblem
         }
     }
 
-    public static void main(String[] args) throws FileNotFoundException
+    public void export_fichier()
+    {
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
+        
+        try {
+            fis = new FileInputStream(new File("file.txt"));
+            fos = new FileOutputStream(new File("import.csv"));
+            
+            InputStreamReader ipsr=new InputStreamReader(fis);
+            BufferedReader br=new BufferedReader(ipsr);
+            String slue;
+            String s="";
+            while ((slue=br.readLine())!=null){
+                    s+=slue+"\n";
+            }
+            s=s.replace(',', '.');
+            s=s.replace(" : ", ",");
+            s=s.replace(": ", ",");
+            br.close();
+            String sinit="\r\nReines Max,"+nbMax+"\r\nReines placees,"+nb+"\r\n";
+            s=s.replace("** Choco 3.3.1 (2015-05),Constraint Programming Solver. Copyleft (c) 2010-2015",sinit);
+            fos.write(s.getBytes());
+        
+        } catch (FileNotFoundException e) {
+            //FileInputStream ne trouve aucun fichier
+            e.printStackTrace();
+        } catch (IOException e) {
+            //erreur écriture ou lecture
+            e.printStackTrace();
+        } 
+        
+        finally {
+            // On ferme nos flux de données dans un bloc finally pour s'assurer
+            // que ces instructions seront exécutées dans tous les cas même si
+            // une exception est levée !
+            try {
+                if (fis != null)
+                fis.close();
+            } 
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (fos != null)
+                fos.close();
+            }
+            catch (IOException e) {
+               e.printStackTrace();
+            }
+        }  
+    }
+    
+    public static void main(String[] args) throws FileNotFoundException, IOException
     {
         Projet p = new Projet();
-     //  FileOutputStream f = new FileOutputStream("file.txt");
-      //  System.setOut(new PrintStream(f));
-      // Create a stream to hold the output
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    PrintStream ps = new PrintStream(baos);
-    // IMPORTANT: Save the old System.out!
-    PrintStream old = System.out;
-    // Tell Java to use your special stream
-    System.setOut(ps);
-    p.initTableaux();
-    p.placerReines2();
-    p.execute(args);
-    // Put things back
-    System.out.flush();
-    System.setOut(old);
-    // Show what happened
-    System.out.println("Here: " + baos.toString());
-       // p.displayTableau();
+        FileOutputStream f = new FileOutputStream("file.txt");
+        //System.setOut(new PrintStream(f));
+        // Create a stream to hold the output
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(baos);
+        // IMPORTANT: Save the old System.out!
+        PrintStream old = System.out;
+        // Tell Java to use your special stream
+        System.setOut(ps);
+        p.initTableaux();
+        p.placerReines2();
+        p.execute(args);
+        // Put things back
+        System.out.flush();
+        System.setOut(old);
+        // Show what happened
+        System.out.println("Here: " + baos.toString());
+        //Pour écriture fichier + console
+        baos.writeTo(f);
+        // p.displayTableau();
+        f.close();
+        p.export_fichier();
     }
 
     @Override
@@ -250,7 +314,7 @@ public class Projet extends AbstractProblem
     @Override
     public void solve()
     {
-        solver.findSolution();
+        solver.findAllSolutions();
     }
 
     @Override

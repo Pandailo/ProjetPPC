@@ -4,17 +4,21 @@
 	Constraints : 57
 	Default search strategy : no
 	Completed search strategy : no
+- Solution #1 found. 1 Solutions, Resolution 0,026s, 11 Nodes (418,7 n/s), 15 Backtracks, 9 Fails, 0 Restarts 
+	Q_1 = 7 Q_2 = 5 Q_4 = 2 Q_5 = 4 Q_6 = 6 Q_7 = 3 .
+- Solution #2 found. 2 Solutions, Resolution 0,030s, 15 Nodes (497,9 n/s), 19 Backtracks, 12 Fails, 0 Restarts 
+	Q_1 = 4 Q_2 = 6 Q_4 = 2 Q_5 = 7 Q_6 = 5 Q_7 = 3 .
 - Incomplete search - Unexpected interruption.
-	Solutions: 0
-	Building time : 0,049s
-	Initialisation : 0,003s
-	Initial propagation : 0,006s
-	Resolution : 0,006s
-	Nodes: 0 (0,0 n/s) 
-	Backtracks: 0
-	Fails: 1
+	Solutions: 2
+	Building time : 0,095s
+	Initialisation : 0,007s
+	Initial propagation : 0,016s
+	Resolution : 0,031s
+	Nodes: 15 (486,9 n/s) 
+	Backtracks: 27
+	Fails: 12
 	Restarts: 0
-	Max depth: 0
-	Memory: -1mb
+	Max depth: 7
+	Memory: 0mb
 	Variables: 10
 	Constraints: 57
