@@ -33,8 +33,8 @@ import org.chocosolver.solver.Solver;
 public class Projet extends AbstractProblem
 {
 
-    private final int nbMax = 8;
-    private final int nb = 2;
+    private int nbMax = 8;
+    private int nb = 2;
     IntVar[] allQueens;
     int[][] initialQueens = new int[nbMax][nbMax];
     int[][] tableauvide = new int[nbMax][nbMax];
@@ -188,8 +188,9 @@ public class Projet extends AbstractProblem
         FileOutputStream fos = null;
         
         try {
+            File imp = new File("import.csv");
             fis = new FileInputStream(new File("file.txt"));
-            fos = new FileOutputStream(new File("import.csv"));
+            fos = new FileOutputStream(imp,true);
             
             InputStreamReader ipsr=new InputStreamReader(fis);
             BufferedReader br=new BufferedReader(ipsr);
@@ -203,7 +204,8 @@ public class Projet extends AbstractProblem
             s=s.replace(": ", ",");
             br.close();
             String sinit="- Reines:\r\n	Reines Max,"+nbMax+"\r\n	Reines placees,"+nb;
-            s=s.replace("** Choco 3.3.1 (2015-05),Constraint Programming Solver. Copyleft (c) 2010-2015",sinit);
+            s+=sinit;
+            s+="\n";
             fos.write(s.getBytes());
         
         } catch (FileNotFoundException e) {
@@ -238,31 +240,64 @@ public class Projet extends AbstractProblem
     
     public static void main(String[] args) throws FileNotFoundException, IOException
     {
-        Projet p = new Projet();
-        FileOutputStream f = new FileOutputStream("file.txt");
-        //System.setOut(new PrintStream(f));
-        // Create a stream to hold the output
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(baos);
-        // IMPORTANT: Save the old System.out!
-        PrintStream old = System.out;
-        // Tell Java to use your special stream
-        System.setOut(ps);
-        p.initTableaux();
-        p.placerReines2();
-        p.execute(args);
-        // Put things back
-        System.out.flush();
-        System.setOut(old);
-        // Show what happened
-        System.out.println("Here: " + baos.toString());
-        //Pour écriture fichier + console
-        baos.writeTo(f);
-        // p.displayTableau();
-        f.close();
-        p.export_fichier();
+        int nbPlacees = 0;
+        for(int i =0;i<10;i++){
+            Projet p = new Projet();
+            nbPlacees = (int)(Math.random()*7);
+            p.setNb(nbPlacees);
+            FileOutputStream f = new FileOutputStream("file.txt");
+            //System.setOut(new PrintStream(f));
+            // Create a stream to hold the output
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            PrintStream ps = new PrintStream(baos);
+            // IMPORTANT: Save the old System.out!
+            PrintStream old = System.out;
+            // Tell Java to use your special stream
+            System.setOut(ps);
+            p.initTableaux();
+            p.placerReines2();
+            p.execute(args);
+            // Put things back
+            System.out.flush();
+            System.setOut(old);
+            String baostemp=baos.toString().replace("\n\t",":");
+            String[] res=baostemp.split(":");;
+            String toWrite="";
+            for(int j =0;j<res.length;j++){
+                System.out.println(res[j]);
+                if(res[j].equals("Solutions")||res[j].equals("Building time ")){
+                    toWrite+=res[j]+":"+res[j+1]+"\n";
+                }
+            }
+            // Show what happened
+            //Pour écriture fichier + console
+            f.write(toWrite.getBytes());
+            //baos.writeTo(f);
+// p.displayTableau();
+            f.close();
+            p.export_fichier();
+        }
+
     }
 
+    public int getNbMax() {
+        return nbMax;
+    }
+
+    public void setNbMax(int nbMax) {
+        this.nbMax = nbMax;
+    }
+
+    public int getNb() {
+        return nb;
+    }
+
+    public void setNb(int nb) {
+        this.nb = nb;
+    }
+    
+    
+    
     @Override
     public void createSolver()
     {
@@ -314,7 +349,7 @@ public class Projet extends AbstractProblem
     @Override
     public void solve()
     {
-        solver.findAllSolutions();
+        solver.findSolution();
     }
 
     @Override
