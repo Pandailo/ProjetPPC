@@ -1,1 +1,1 @@
-Solutions: 1: Building time : 0,000s: 
+Solutions: 356: Building time : 0,000s: Nodes: 3 971 (52 289,0 n/s) : Backtracks: 7 231: Fails: 3 260: Restarts: 0: 

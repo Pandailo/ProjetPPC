@@ -240,42 +240,35 @@ public class Projet extends AbstractProblem
     
     public static void main(String[] args) throws FileNotFoundException, IOException
     {
-        int max = 20;
+        int max = 13;
         int nbPlacees = 0;
         int nbR = 0;
         for(int i =0;i<1000;i++){
             Projet p = new Projet();
-            nbR = (int)(Math.random()*(max-1))+1;
-            nbPlacees = (int)(Math.random()*(nbR-1));
+            nbR = max;
+            nbPlacees = (int)(Math.random()*(nbR));
             p.setNbMax(nbR);
             p.setNb(nbPlacees);
             FileOutputStream f = new FileOutputStream("file.txt");
-            //System.setOut(new PrintStream(f));
-            // Create a stream to hold the output
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             PrintStream ps = new PrintStream(baos);
-            // IMPORTANT: Save the old System.out!
             PrintStream old = System.out;
-            // Tell Java to use your special stream
             System.setOut(ps);
             p.initTableaux();
             p.placerReines2();
             p.execute(args);
-            // Put things back
             System.out.flush();
             System.setOut(old);
             String baostemp=baos.toString().replace("\n\t",":");
             String[] res=baostemp.split(":");;
             String toWrite="";
             for(int j =0;j<res.length;j++){
-                if(res[j].equals("Solutions")||res[j].equals("Building time ")){
+                if(res[j].equals("Solutions")||res[j].equals("Building time ")||res[j].equals("Nodes")||res[j].equals("Fails")||res[j].equals("Backtracks")||res[j].equals("Restarts")){
                     toWrite+=res[j]+":"+res[j+1]+": ";
                 }
             }
-            // Show what happened
-            //Pour écriture fichier + console
             f.write(toWrite.getBytes());
-            //baos.writeTo(f);
+           // baos.writeTo(f);
             // p.displayTableau();
             f.close();
             p.export_fichier();
@@ -354,7 +347,7 @@ public class Projet extends AbstractProblem
     @Override
     public void solve()
     {
-        solver.findSolution();
+        solver.findAllSolutions();
     }
 
     @Override
