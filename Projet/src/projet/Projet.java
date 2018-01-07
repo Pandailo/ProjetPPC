@@ -240,12 +240,14 @@ public class Projet extends AbstractProblem
     
     public static void main(String[] args) throws FileNotFoundException, IOException
     {
+        // Changer cette variable pour changer le nombre de reines max (k)
         int max = 8;
         int nbPlacees = 0;
         int nbR = 0;
         for(int i =0;i<1000;i++){
             Projet p = new Projet();
             nbR = max;
+            // Changer cette variable pour changer le nombre de reines placées (n) avec (n<=k) 
             nbPlacees = (int)(Math.random()*(nbR));
             p.setNbMax(nbR);
             p.setNb(nbPlacees);
