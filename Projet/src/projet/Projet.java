@@ -240,7 +240,7 @@ public class Projet extends AbstractProblem
     
     public static void main(String[] args) throws FileNotFoundException, IOException
     {
-        int max = 13;
+        int max = 8;
         int nbPlacees = 0;
         int nbR = 0;
         for(int i =0;i<1000;i++){
