@@ -198,15 +198,14 @@ public class Projet extends AbstractProblem
             String slue;
             String s="";
             while ((slue=br.readLine())!=null){
-                    s+=slue+"\n";
+                    s+=slue;
             }
             s=s.replace(',', '.');
             s=s.replace(" : ", ",");
             s=s.replace(": ", ",");
             br.close();
-            String sinit="- Reines:\r\n	Reines Max,"+nbMax+"\r\n	Reines placees,"+nb;
+            String sinit="Reines Max,"+nbMax+",Reines placees,"+nb+"\n";
             s+=sinit;
-            s+="\n";
             fos.write(s.getBytes());
         
         } catch (FileNotFoundException e) {
@@ -270,7 +269,7 @@ public class Projet extends AbstractProblem
             String toWrite="";
             for(int j =0;j<res.length;j++){
                 if(res[j].equals("Solutions")||res[j].equals("Building time ")){
-                    toWrite+=res[j]+":"+res[j+1]+"\n";
+                    toWrite+=res[j]+":"+res[j+1]+": ";
                 }
             }
             // Show what happened
