@@ -1,2 +1,2 @@
-Solutions: 1
-Building time : 0,001s
+Solutions: 0
+Building time : 0,000s

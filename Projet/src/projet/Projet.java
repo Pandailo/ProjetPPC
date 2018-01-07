@@ -41,6 +41,7 @@ public class Projet extends AbstractProblem
     private IntVar[] vars;
     /*Les colonnes et lignes sont numérotées de 0 à 1
     /* génération des premières reines bien placée*/
+    
     public void initTableaux()
     {
         for (int i = 0; i < nbMax; i++)
@@ -240,10 +241,14 @@ public class Projet extends AbstractProblem
     
     public static void main(String[] args) throws FileNotFoundException, IOException
     {
+        int max = 20;
         int nbPlacees = 0;
-        for(int i =0;i<10;i++){
+        int nbR = 0;
+        for(int i =0;i<1000;i++){
             Projet p = new Projet();
-            nbPlacees = (int)(Math.random()*7);
+            nbR = (int)(Math.random()*(max-1))+1;
+            nbPlacees = (int)(Math.random()*(nbR-1));
+            p.setNbMax(nbR);
             p.setNb(nbPlacees);
             FileOutputStream f = new FileOutputStream("file.txt");
             //System.setOut(new PrintStream(f));
@@ -264,7 +269,6 @@ public class Projet extends AbstractProblem
             String[] res=baostemp.split(":");;
             String toWrite="";
             for(int j =0;j<res.length;j++){
-                System.out.println(res[j]);
                 if(res[j].equals("Solutions")||res[j].equals("Building time ")){
                     toWrite+=res[j]+":"+res[j+1]+"\n";
                 }
@@ -273,7 +277,7 @@ public class Projet extends AbstractProblem
             //Pour écriture fichier + console
             f.write(toWrite.getBytes());
             //baos.writeTo(f);
-// p.displayTableau();
+            // p.displayTableau();
             f.close();
             p.export_fichier();
         }
@@ -286,6 +290,8 @@ public class Projet extends AbstractProblem
 
     public void setNbMax(int nbMax) {
         this.nbMax = nbMax;
+        this.initialQueens = new int[nbMax][nbMax];
+        this.tableauvide = new int[nbMax][nbMax];
     }
 
     public int getNb() {
